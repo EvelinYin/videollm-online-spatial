@@ -60,7 +60,7 @@ def chat_template(self, stream_placeholder_jinja2: str):
         "{% elif add_stream_generation_prompt %}"
         "{{ ']\nAssistant:' }}"
         "{% endif %}"
-    )
+    )    
     template = template.replace('STREAM_PLACEHOLDER', stream_placeholder_jinja2)
     return template
 

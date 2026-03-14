@@ -66,10 +66,16 @@ class LiveLlamaForCausalLM(LlamaForCausalLM, LiveMixin):
         return outputs
 
     def generate_after_embed(self, input_ids, frames, **kwargs):
-        return super().generate(inputs_embeds=self.joint_embed(input_ids, frames), **kwargs)
+        # try:
+        embds = self.joint_embed(input_ids, frames)
+        return super().generate(inputs_embeds=embds, **kwargs)
+        # except Exception as e:
+        #     print(f"Error in generate_after_embed: {e}")
+        #     breakpoint()
 
 def build_live_llama(**kwargs):
     return build_live(config_class=LiveLlamaConfig, model_class=LiveLlamaForCausalLM, **kwargs)
+
 
 if __name__ == '__main__':
     from ..arguments_live import LiveOnePlusTrainingArguments

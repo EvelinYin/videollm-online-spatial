@@ -3,6 +3,7 @@ from dataclasses import asdict
 from models import build_model_and_tokenizer, parse_args
 from data import build_eval_dataset_dict, get_data_collator, get_compute_metrics_dict
 from engine import TrainerWithGenToEval
+from torch.utils.data import Subset
 
 def evaluate():
     args = parse_args()
@@ -10,7 +11,11 @@ def evaluate():
     eval_dataset_dict = build_eval_dataset_dict(tokenizer=tokenizer, model_config=model.config, **asdict(args))
     data_collator = get_data_collator(tokenizer=tokenizer, model_config=model.config, **asdict(args))
     compute_metrics_dict = get_compute_metrics_dict(dataset_dict=eval_dataset_dict, tokenizer=tokenizer, **asdict(args))
-
+    
+    # from torch.utils.data import Subset
+    # eval_dataset_dict['vstibench_goalstep_livechat_trainval'] = Subset(eval_dataset_dict['vstibench_goalstep_livechat_trainval'], range(10))
+     
+    breakpoint()
     trainer = TrainerWithGenToEval(
         model=model, tokenizer=tokenizer,
         args=args,

@@ -61,7 +61,9 @@ def ffmpeg_once(src_path: str, dst_path: str, *, fps: int = None, resolution: in
     if fps is not None:
         command += ['-r', str(fps)]
     if resolution is not None:
-        command += ['-vf', f"scale='if(gt(iw\\,ih)\\,{resolution}\\,-2)':'if(gt(iw\\,ih)\\,-2\\,{resolution})',pad={resolution}:{resolution}:(ow-iw)/2:(oh-ih)/2:color='{pad}'"]
+        # Fixed: removed single quotes around if() expressions in scale filter which were causing encoder error
+        # Old: f"scale='if(gt(iw\\,ih)\\,{resolution}\\,-2)':'if(gt(iw\\,ih)\\,-2\\,{resolution})',pad={resolution}:{resolution}:(ow-iw)/2:(oh-ih)/2:color='{pad}',setsar=1"
+        command += ['-vf', f"scale=if(gt(iw\\,ih)\\,{resolution}\\,-2):if(gt(iw\\,ih)\\,-2\\,{resolution}),pad={resolution}:{resolution}:(ow-iw)/2:(oh-ih)/2:color={pad},setsar=1"]
     command += [dst_path]
     subprocess.run(command, check=True)
 
